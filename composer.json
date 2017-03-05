@@ -1,0 +1,30 @@
+{
+  "name": "yawmoght/twitter-conversations",
+  "type": "library",
+  "description": "Conversations support for use with Twitter API",
+  "keywords": ["twitter", "api", "conversations", "tweets", "twitter api", "twitter oauth"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roberto Martinez",
+      "email": "yawmoght@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "abraham/twitteroauth": "^0.7.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
+}
