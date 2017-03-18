@@ -1,5 +1,8 @@
 <?php
 
+use sensitive\TestData;
+use sensitive\TwitterConsumer;
+
 class TweetRequesterTest extends PHPUnit_Framework_TestCase
 {
     /** @var  TweetRequester|PHPUnit_Framework_MockObject_MockObject */
@@ -14,15 +17,21 @@ class TweetRequesterTest extends PHPUnit_Framework_TestCase
     }
 
     /** @dataProvider getLastTweets */
-    public function testGetLastTweets($screenName, $days, $apiResponse)
+    public function testGetLastTweets($screenName, $days)
     {
         $response = $this->tweetRequester->getLastTweets($screenName, $days);
     }
 
-    /** @dataProvider getResponses */
-    public function testGetResponses($tweet)
+    /** @dataProvider getTweetsByDateRange */
+    public function testGetTweetsByDateRange($screenName, $dateSince, $dateUntil)
     {
-        $response = $this->tweetRequester->getResponses($tweet);
+        $response = $this->tweetRequester->getTweetsByDateRange($screenName, $dateSince, $dateUntil);
+    }
+
+    /** @dataProvider getReplies */
+    public function testGetReplies($tweet)
+    {
+        $response = $this->tweetRequester->getReplies($tweet);
     }
 
     /** @dataProvider getTweet */
@@ -34,13 +43,20 @@ class TweetRequesterTest extends PHPUnit_Framework_TestCase
     public function getLastTweets()
     {
         return array(
-            array('yawmoght', 3, $this->getTestResponse()),
+            array(TestData::ScreenName, 3),
         );
     }
 
-    public function getResponses()
+    public function getTweetsByDateRange()
     {
+        return array(
+            array(TestData::ScreenName, TestData::DateSinceNow, 'now'),
+            array(TestData::ScreenName, TestData::DateSince, TestData::DateUntil)
+        );
+    }
 
+    public function getReplies()
+    {
         return array(
             array($this->getCorrectTweet())
         );
@@ -49,28 +65,19 @@ class TweetRequesterTest extends PHPUnit_Framework_TestCase
     public function getTweet()
     {
         return array(
-            array('')
+            array(TestData::TwitterIdForReplies)
         );
     }
 
     protected function getCorrectTweet()
     {
         $tweet = new Tweet();
-        $tweet->setId("");
+        $tweet->setId(TestData::TwitterIdForReplies);
 
         $twitterUser = new TwitterUser();
-        $twitterUser->setScreenName('yawmoght');
+        $twitterUser->setScreenName(TestData::ScreenName);
         $tweet->setAuthor($twitterUser);
 
         return $tweet;
-    }
-
-    protected function getTestResponse()
-    {
-        $response = new \Abraham\TwitterOAuth\Response();
-
-        $response->setHttpCode(200);
-
-        return $response;
     }
 }

@@ -24,20 +24,41 @@ class TweetRequester
         $this->twitterClient = $twitterClient;
     }
 
-    public function getLastTweets($screenName, $days = 1)
+    public function getLastTweets($screenName, $daysAgo = 1)
     {
-        $dateSince = (new \DateTime())->modify('-' . $days . ' day')->format('Y-m-d');
+        $dateSince = $this->buildDateSince($daysAgo);
+
+        return $this->getTweetsByDateRange($screenName, $dateSince);
+    }
+
+    protected function buildDateSince($daysAgo)
+    {
+        return (new \DateTime())->modify('-' . $daysAgo . ' day')->format('Y-m-d');
+    }
+
+    /**
+     * @param $screenName
+     * @param $dateSince
+     * @param string $dateUntil
+     * @return Tweet[]
+     */
+    public function getTweetsByDateRange($screenName, $dateSince, $dateUntil = 'now')
+    {
+        if ($dateUntil == 'now'){
+            $dateUntil = $this->buildDateSince(-1);
+        }
 
         $searchParameters = new TwitterSearchParameters();
         $searchParameters->setSince($dateSince);
         $searchParameters->setFrom($screenName);
+        $searchParameters->setUntil($dateUntil);
 
         $search = $this->search($searchParameters);
 
         return $this->buildTweets($search);
     }
 
-    public function getResponses(Tweet $tweet)
+    public function getReplies(Tweet $tweet)
     {
         $searchParameters = new TwitterSearchParameters();
         $searchParameters->setSinceId($tweet->getId());

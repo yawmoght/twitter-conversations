@@ -1,5 +1,8 @@
 <?php
 
+use sensitive\TwitterConsumer;
+use sensitive\TestData;
+
 class ConversationManagerTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -38,14 +41,14 @@ class ConversationManagerTest extends PHPUnit_Framework_TestCase
     public function getFirstTweet()
     {
         return array(
-            array('', '', '')
+            array(TestData::TwitterIdForFirstReply, TestData::RepliesToForFirstReply, TestData::ScreenName)
         );
     }
 
     public function getThreads()
     {
         return array(
-            array('', 1, 5)
+            array(TestData::ScreenName, 1, 5)
         );
     }
 
