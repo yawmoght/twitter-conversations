@@ -1,11 +1,15 @@
 <?php
 
+use Endpoints\AbstractEndpoint;
+
 class TweetRequester
 {
     /**
      * @var TwitterClientInterface
      */
     protected $twitterClient;
+
+    protected $apiCalls = 0;
 
     /**
      * @param $consumer_key
@@ -14,6 +18,8 @@ class TweetRequester
     public function __construct($consumer_key, $consumer_secret)
     {
         $this->twitterClient = new TwitterOAuthWrapper($consumer_key, $consumer_secret);
+        $this->searchEndpoint = new \Endpoints\SearchEndpoint();
+        $this->statusEndpoint = new \Endpoints\StatusEndpoint();
     }
 
     /**
@@ -44,7 +50,7 @@ class TweetRequester
      */
     public function getTweetsByDateRange($screenName, $dateSince, $dateUntil = 'now')
     {
-        if ($dateUntil == 'now'){
+        if ($dateUntil == 'now') {
             $dateUntil = $this->buildDateSince(-1);
         }
 
@@ -71,19 +77,26 @@ class TweetRequester
 
     public function getTweet($id)
     {
-        $path = sprintf('statuses/show/%s', $id);
-        $response = $this->twitterClient->get($path);
+        $response = $this->get($this->statusEndpoint, array(), $id);
 
         return new Tweet($response);
     }
 
     protected function search(TwitterSearchParameters $searchParameters)
     {
-        $path = 'search/tweets';
         $query = $searchParameters->toArray();
-        $response = $this->twitterClient->get($path, $query);
+
+        $response = $this->get($this->searchEndpoint, $query);
 
         return $response;
+    }
+
+    protected function get(AbstractEndpoint $endpoint, $query = array(), $id = null)
+    {
+        $endpoint->addApiCallCount();
+        $path = $endpoint->buildPath($id);
+
+        return $this->twitterClient->get($path, $query);
     }
 
     /**
@@ -99,5 +112,4 @@ class TweetRequester
 
         return $tweets;
     }
-
 }

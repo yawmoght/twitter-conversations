@@ -9,7 +9,6 @@ TO DO LIST:
 -Features
 
     -Paginate until enough results
-    -Information about spent API calls
     -Reduce API calls number
 
 -Documentation
