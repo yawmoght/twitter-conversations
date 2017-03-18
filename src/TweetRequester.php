@@ -58,7 +58,7 @@ class TweetRequester
         return $this->buildTweets($search);
     }
 
-    public function getReplies(Tweet $tweet)
+    public function getPossibleReplies(Tweet $tweet)
     {
         $searchParameters = new TwitterSearchParameters();
         $searchParameters->setSinceId($tweet->getId());

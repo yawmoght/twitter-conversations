@@ -26,10 +26,15 @@ class ConversationManagerTest extends PHPUnit_Framework_TestCase
     /** @dataProvider getThreads */
     public function testGetThreads($screenName, $daysOld, $length)
     {
-        $this->conversationManager = new ConversationManager();
-        $this->conversationManager->initiateClient(TwitterConsumer::KEY, TwitterConsumer::SECRET);
-
         $threads = $this->conversationManager->getThreads($screenName, $daysOld, $length);
+    }
+
+    /** @dataProvider fillConversation */
+    public function testFillConversation($tweetUrl)
+    {
+        $tweet = Tweet::buildFromStatusUrl($tweetUrl);
+
+        $this->conversationManager->fillConversation($tweet);
     }
 
     protected function setUp()
@@ -49,6 +54,13 @@ class ConversationManagerTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array(TestData::ScreenName, 1, 5)
+        );
+    }
+
+    public function fillConversation()
+    {
+        return array(
+            array(TestData::FillConversationUrl)
         );
     }
 

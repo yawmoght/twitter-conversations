@@ -4,11 +4,13 @@ As client to the Twitter API we use https://github.com/abraham/twitteroauth
 
 TO DO LIST:
 
--Working tests
-
 -Documentation
 
 -Features
+
+    -Paginate until enough results
+    -Information about spent API calls
+    -Reduce API calls number
 
 -Documentation
 

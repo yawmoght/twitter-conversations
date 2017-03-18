@@ -38,6 +38,21 @@ class Tweet
         $this->setReplyTo($status->in_reply_to_status_id);
     }
 
+    public static function buildFromStatusUrl($url)
+    {
+        $parts = parse_url($url);
+
+        $path = explode('/', $parts['path']);
+
+        $tweet = new static();
+        $author = new TwitterUser();
+        $author->setScreenName($path[1]);
+        $tweet->setAuthor($author);
+        $tweet->setId($path[3]);
+
+        return $tweet;
+    }
+
     /**
      * @return mixed
      */
@@ -96,7 +111,7 @@ class Tweet
 
     public function addReply(Tweet $tweet)
     {
-        $this->replies[] = $tweet;
+        $this->replies[$tweet->getId()] = $tweet;
     }
 
     /**

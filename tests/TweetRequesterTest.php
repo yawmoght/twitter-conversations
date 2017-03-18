@@ -31,7 +31,7 @@ class TweetRequesterTest extends PHPUnit_Framework_TestCase
     /** @dataProvider getReplies */
     public function testGetReplies($tweet)
     {
-        $response = $this->tweetRequester->getReplies($tweet);
+        $response = $this->tweetRequester->getPossibleReplies($tweet);
     }
 
     /** @dataProvider getTweet */

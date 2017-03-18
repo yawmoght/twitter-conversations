@@ -35,6 +35,19 @@ class ConversationManager
         return $tweet;
     }
 
+    public function fillConversation(Tweet $tweet)
+    {
+        $possibleReplies = $this->tweetRequester->getPossibleReplies($tweet);
+        array_push($possibleReplies, $tweet);
+        //relate them (if empty, return)
+        $this->relateTweets($possibleReplies);
+        //foreach direct reply, fillConversation
+        foreach ($tweet->getReplies() as $reply)
+        {
+            $this->fillConversation($reply);
+        }
+    }
+
     /**
      * From some tweets, if they are replies of each other, they are put in order and removed duplicates
      * @param Tweet[] $tweets
