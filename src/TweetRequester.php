@@ -9,6 +9,8 @@ class TweetRequester
      */
     protected $twitterClient;
 
+    protected $searchParametersBuilder;
+
     protected $apiCalls = 0;
 
     /**
@@ -20,6 +22,7 @@ class TweetRequester
         $this->twitterClient = new TwitterOAuthWrapper($consumer_key, $consumer_secret);
         $this->searchEndpoint = new \Endpoints\SearchEndpoint();
         $this->statusEndpoint = new \Endpoints\StatusEndpoint();
+        $this->searchParametersBuilder = new SearchParametersBuilder();
     }
 
     /**
@@ -54,10 +57,7 @@ class TweetRequester
             $dateUntil = $this->buildDateSince(-1);
         }
 
-        $searchParameters = new TwitterSearchParameters();
-        $searchParameters->setSince($dateSince);
-        $searchParameters->setFrom($screenName);
-        $searchParameters->setUntil($dateUntil);
+        $searchParameters = $this->searchParametersBuilder->buildDateRange($screenName, $dateSince, $dateUntil);
 
         $search = $this->search($searchParameters);
 
@@ -66,9 +66,7 @@ class TweetRequester
 
     public function getPossibleReplies(Tweet $tweet)
     {
-        $searchParameters = new TwitterSearchParameters();
-        $searchParameters->setSinceId($tweet->getId());
-        $searchParameters->setTo($tweet->getAuthor()->getScreenName());
+        $searchParameters = $this->searchParametersBuilder->buildPossibleReplies($tweet);
 
         $search = $this->search($searchParameters);
 
