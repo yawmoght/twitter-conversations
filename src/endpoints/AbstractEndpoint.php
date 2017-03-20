@@ -39,7 +39,7 @@ class AbstractEndpoint
         return $this->apiCallLimit;
     }
 
-    public function buildPath($id = null)
+    public function getPath()
     {
         return $this->path;
     }

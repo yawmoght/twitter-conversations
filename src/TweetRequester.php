@@ -77,7 +77,8 @@ class TweetRequester
 
     public function getTweet($id)
     {
-        $response = $this->get($this->statusEndpoint, array(), $id);
+        $this->statusEndpoint->setId($id);
+        $response = $this->get($this->statusEndpoint, array());
 
         return new Tweet($response);
     }
@@ -91,10 +92,10 @@ class TweetRequester
         return $response;
     }
 
-    protected function get(AbstractEndpoint $endpoint, $query = array(), $id = null)
+    protected function get(AbstractEndpoint $endpoint, $query = array())
     {
         $endpoint->addApiCallCount();
-        $path = $endpoint->buildPath($id);
+        $path = $endpoint->getPath();
 
         return $this->twitterClient->get($path, $query);
     }
